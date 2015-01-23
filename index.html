@@ -7,12 +7,38 @@
   	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-	<section id="a"></section>
+	<section id="a">
+	</section>
 	<section id="b"></section>
 	<section id="c"></section>
 	<section id="d"></section>
-	<img class="animator">
+	<div class="pg_wrapper">
+		<div id="progressbar"></div>
+	</div>
+	<canvas class="animator" width="300" height="300"></canvas>
+
+	<script type="text/javascript" src="progressbar.min.js"></script>
 	<script type="text/javascript">
+
+	// BEGIN: progress_bar
+	// element bind to progressbar must provided in ID
+	var progressbar_selector = "#progressbar";
+	var circle_progressbar = new ProgressBar.Circle(progressbar_selector, {
+	    color: '#FCB03C',
+	    strokeWidth: 3,
+	    trailWidth: 1,
+	    duration: 1500,
+	    text: {
+	        value: '0'
+	    },
+	    step: function(state, bar) {
+	    	console.log()
+	        bar.setText((bar.value() * 100).toFixed(0));
+	    }
+	});
+	// END: progress_bar
+
+
 	var animator = document.getElementsByClassName("animator")[0];
 
 
@@ -27,8 +53,14 @@
 
 	   var left = (window.innerWidth - img_width) / 2;
 	   var top = (window.innerHeight - img_height) / 2;
+
 	   animator.style.left = left + "px";
 	   animator.style.top = top + "px";
+
+	   var prog = document.querySelector(".pg_wrapper");
+	   console.log(prog);
+	   prog.style.left = left + "px";
+	   prog.style.top = top + "px";
 	};
 	var frames_prefix = "frames/inu/";
 	if(animation === "physcho"){
@@ -46,11 +78,15 @@
 			}else{
 				console.log("all_imgs_loaded_callback is not defined as FUNCTION");
 			}
+		}else{
+			circle_progressbar.set(flag_img_loaded/imgs.length);
 		}
 	};
 	var all_imgs_loaded_callback = function() {
 		console.log("all image loaded");
 		flag_all_imgs_loaded = true;
+		circle_progressbar.set(1);
+		circle_progressbar.setText("Download done!\nScroll down");
 	}
 
 	// BEGIN TO CODE FROM HERE
@@ -74,11 +110,10 @@
 				var frame_play = parseInt(((0-_t) % (imgs.length * pixel_per_frame))/pixel_per_frame);
 				if(frame_play >= 0){
 					console.log(frame_play + " " + imgs.length);
-					animator.src = imgs[frame_play].src;	
+					animator.getContext("2d").drawImage(imgs[frame_play],0,0,300,300);	
 				}
 				
 			}
-			// animator.src = window.getBoundingClientRect()
 		}
 	};
 
@@ -106,7 +141,7 @@
 	}
 	
 	
-	setInterval(interval_event,1000 / 20);
+	setInterval(interval_event,1000 / 15);
 
 	sizingEvent();
 	var timeout_id;

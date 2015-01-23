@@ -30,3 +30,13 @@ section {
 	width: 300px;
 	height: 300px;
 }
+
+/* progress bar */
+#progressbar,.pg_wrapper {
+	width: 300px;
+	height: 300px;
+	position: fixed;
+}
+.pg_wrapper{
+	text-align: center;
+}
