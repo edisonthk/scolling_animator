@@ -1,0 +1,32 @@
+html, body {
+    min-width: 100%;
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+section#a {
+	background-color: blue;
+}
+
+section#b {
+	background-color: red;
+}
+
+section#c {
+	background-color: yellow;
+}
+section#d {
+	background-color: green;
+}
+
+section {
+	width: 100%;
+	height: 1000px;
+}
+
+.animator {
+	position: fixed;
+	width: 300px;
+	height: 300px;
+}

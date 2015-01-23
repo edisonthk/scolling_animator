@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="jp">
+<head>
+  	<meta charset="utf-8">
+  	<title></title>
+  	<meta name="description" content="">
+  	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+	<section id="a"></section>
+	<section id="b"></section>
+	<section id="c"></section>
+	<section id="d"></section>
+	<img class="animator">
+	<script type="text/javascript">
+	var animator = document.getElementsByClassName("animator")[0];
+
+
+	// available_animation
+	// "inu", "physcho"
+	var animation = "physcho";
+
+	var sizingEvent = function(){
+	   // サイズを調整するイベント 
+	   var img_width = 300;
+	   var img_height = 300;
+
+	   var left = (window.innerWidth - img_width) / 2;
+	   var top = (window.innerHeight - img_height) / 2;
+	   animator.style.left = left + "px";
+	   animator.style.top = top + "px";
+	};
+	var frames_prefix = "frames/inu/";
+	if(animation === "physcho"){
+		frames_prefix = "frames/physcho_op/";
+	}
+	var last_changed_val = 0;
+	var flag_img_loaded = 0;
+	var flag_all_imgs_loaded = false;
+	var single_img_loaded_callback = function(){
+		// １枚の画像がロードしたら発生するイベント
+		flag_img_loaded ++ ;
+		if(imgs.length <= flag_img_loaded){
+			if(typeof all_imgs_loaded_callback === "function"){
+				all_imgs_loaded_callback();
+			}else{
+				console.log("all_imgs_loaded_callback is not defined as FUNCTION");
+			}
+		}
+	};
+	var all_imgs_loaded_callback = function() {
+		console.log("all image loaded");
+		flag_all_imgs_loaded = true;
+	}
+
+	// BEGIN TO CODE FROM HERE
+	var s1 = [
+		document.querySelector("section#a"),
+		document.querySelector("section#b"),
+		document.querySelector("section#c"),
+		document.querySelector("section#d"),
+	];
+
+	console.log(s1);
+
+	var pixel_per_frame = 20;
+	var interval_event = function(){
+		// 周期的に発生するイベント
+		if(flag_all_imgs_loaded){
+			var _t = s1[0].getBoundingClientRect().top;
+			if(last_changed_val != _t){
+				last_changed_val = _t;
+
+				var frame_play = parseInt(((0-_t) % (imgs.length * pixel_per_frame))/pixel_per_frame);
+				if(frame_play >= 0){
+					console.log(frame_play + " " + imgs.length);
+					animator.src = imgs[frame_play].src;	
+				}
+				
+			}
+			// animator.src = window.getBoundingClientRect()
+		}
+	};
+
+	var imgs = [];
+	// 5554
+	
+
+
+	if(animation === "physcho"){
+		for (var i=5572;i<5896;i++) {
+			var img = new Image();
+			img.src = frames_prefix + "physcho_op_0"+i+".jpg";
+			img.onload = single_img_loaded_callback;
+			imgs.push(img);
+		}
+	}else{
+		for (var i=0;i<70;i++) {
+			var img = new Image();
+			var s = "000000000" + i;
+			img.src = frames_prefix + "dog_"+s.substr(s.length-4) + "_a.jpg";
+			
+			img.onload = single_img_loaded_callback;
+			imgs.push(img);
+		};
+	}
+	
+	
+	setInterval(interval_event,1000 / 20);
+
+	sizingEvent();
+	var timeout_id;
+	window.onresize = function(){
+	    clearTimeout(timeout_id);
+	    timeout_id = setTimeout(function(){
+	        sizingEvent();
+	    }, 700);
+	}
+	</script>
+</body>
+</html>
